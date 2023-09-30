@@ -99,7 +99,7 @@ class ViaggiaTrenoSensor(SensorEntity):
         """Initialize the sensor."""
         self._state = None
         self._attributes = {}
-        self._unit = ""
+        self._unit = None
         self._icon = ICON
         self._station_id = station_id
         self._name = name
@@ -166,10 +166,10 @@ class ViaggiaTrenoSensor(SensorEntity):
         if res.get("error", ""):
             if res["error"] == 204:
                 self._state = NO_INFORMATION_STRING
-                self._unit = ""
+                self._unit = None
             else:
                 self._state = "Error: {}".format(res["error"])
-                self._unit = ""
+                self._unit = None
         else:
             for i in MONITORED_INFO:
                 self._attributes[i] = res[i]
@@ -177,13 +177,13 @@ class ViaggiaTrenoSensor(SensorEntity):
             if self.is_cancelled(res):
                 self._state = CANCELLED_STRING
                 self._icon = "mdi:cancel"
-                self._unit = ""
+                self._unit = None
             elif not self.has_departed(res):
                 self._state = NOT_DEPARTED_STRING
-                self._unit = ""
+                self._unit = None
             elif self.has_arrived(res):
                 self._state = ARRIVED_STRING
-                self._unit = ""
+                self._unit = None
             else:
                 self._state = res.get("ritardo")
                 self._unit = UnitOfTime.MINUTES
